@@ -1,0 +1,33 @@
+---
+import { type APISpaceXResponse } from "../types/api";
+import CarContend from "./CarContend.astro";
+const rest = await fetch("https://api.spacexdata.com/v5/launches/query", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    query: {},
+    options: {
+      sort: {
+        data_unix: "asc",
+      },
+      limit: 12,
+    },
+  }),
+});
+const { docs } = (await rest.json()) as APISpaceXResponse;
+---
+
+<div class="grid gap-0 sm:grid-cols-2 lg:grid-cols-3">
+  {
+    docs.map((doc) => (
+      <CarContend 
+      id={doc.id}
+      img={doc.img}
+      details={doc.details}
+      flightNumber={doc.flightNumber}
+      success={doc.success}/>
+    ))
+  }
+</div>
